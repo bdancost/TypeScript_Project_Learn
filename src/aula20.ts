@@ -1,8 +1,8 @@
-class Conta {
+abstract class Conta {
   // Public: acessado de qualquer lugar
   // Private: acessado apenas dentro da sua própria classe
   // Protected: acessado apenas dentro da sua classe e classes filhas
-  protected numero: number;
+  private readonly numero: number;
   protected titular: string;
   protected saldoConta: number;
   constructor(titular: string) {
@@ -20,8 +20,14 @@ class Conta {
     console.log(`Número: ${this.numero}`);
     console.log("------------------");
   }
-  public saldo(): number {
+  public get saldo(): number {
+    // Getter
     return this.saldoConta;
+  }
+
+  private set saldo(saldoConta: number) {
+    // Setter
+    this.saldoConta = saldoConta;
   }
   protected deposito(valor: number) {
     if (valor < 0) {
@@ -43,11 +49,20 @@ class Conta {
   }
 }
 
-class ContaPF extends Conta {
+interface Tributos {
+  taxaCalculo: number;
+  calcularTributo(valor: number): number;
+}
+
+class ContaPF extends Conta implements Tributos {
+  taxaCalculo = 100;
   cpf: number;
   constructor(cpf: number, titular: string) {
     super(titular);
     this.cpf = cpf;
+  }
+  calcularTributo(taxa: number): number {
+    return valor * this.taxaCalculo;
   }
   info() {
     console.log(`Tipo...:PF`);
@@ -109,12 +124,12 @@ cont1.deposito(800);
 cont1.deposito(200);
 cont1.deposito(1000);
 cont1.saque(500);
-console.log(cont1.saldo());
+console.log(cont1.saldo);
 
 // cont2.deposito(8000);
 // cont2.deposito(2000);
 // cont2.deposito(10000);
 // console.log(cont2.saldo());
 
-//cont1.info();
+cont1.info();
 //cont2.info();
